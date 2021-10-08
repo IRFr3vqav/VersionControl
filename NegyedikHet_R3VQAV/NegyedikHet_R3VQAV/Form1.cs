@@ -21,11 +21,16 @@ namespace NegyedikHet_R3VQAV
         Excel.Application xlApp; //Excel alkalmazas
         Excel.Workbook xlWB; //letrehozunk munkafuzetet
         Excel.Worksheet xlSheet; //letrehozunk munkalapot a munkafuzeten belul
+
+        string[] headers;
+
+        object[,] values;
         public Form1()
         {
             InitializeComponent();
             LoadData();
             CreateExcel();
+            FormatTable();
         }
 
         public void LoadData()
@@ -60,7 +65,7 @@ namespace NegyedikHet_R3VQAV
 
         public void CreateTable()
         {
-            string[] headers = new string[]
+            headers = new string[]
             {
                     "Kód",
                     "Eladó",
@@ -78,7 +83,7 @@ namespace NegyedikHet_R3VQAV
                 xlSheet.Cells[1, i + 1] = headers[i];
             }
 
-            object[,] values = new object[Flats.Count, headers.Length];
+            values = new object[Flats.Count, headers.Length];
             int szamlalo = 0;
             int floorColumn = 6;
             foreach (var flat in Flats)
@@ -116,5 +121,30 @@ namespace NegyedikHet_R3VQAV
             return ExcelCoordinate;
         }
 
+        private void FormatTable()
+        {
+            Excel.Range headerRange = xlSheet.get_Range(GetCell(1, 1), GetCell(1, headers.Length));
+            headerRange.Font.Bold = true;
+            headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            headerRange.EntireColumn.AutoFit();
+            headerRange.RowHeight = 40;
+            headerRange.Interior.Color = Color.LightBlue;
+            headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+
+
+            int lastRowID = xlSheet.UsedRange.Rows.Count;
+
+            Excel.Range completeTableRange = xlSheet.get_Range(GetCell(1, 1), GetCell(lastRowID, headers.Length));
+            completeTableRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+
+            Excel.Range elsoOszlop = xlSheet.get_Range(GetCell(2, 1), GetCell(1 + values.GetLength(0), 1));
+            elsoOszlop.Font.Bold = true;
+            elsoOszlop.Interior.Color = Color.LightYellow;
+
+            Excel.Range utolsoOszlop = xlSheet.get_Range(GetCell(2, values.GetLength(1)), GetCell(1 + values.GetLength(0), values.GetLength(1)));
+            utolsoOszlop.Interior.Color = Color.LightGreen;
+            utolsoOszlop.NumberFormat = "###,###.00";
+        }
     }
 }
