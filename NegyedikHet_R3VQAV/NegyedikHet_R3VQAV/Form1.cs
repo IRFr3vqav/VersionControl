@@ -12,9 +12,17 @@ namespace NegyedikHet_R3VQAV
 {
     public partial class Form1 : Form
     {
+        List<Flat> Flats;
+        RealEstateEntities context = new RealEstateEntities();
         public Form1()
         {
             InitializeComponent();
+            LoadData();
+        }
+
+        public void LoadData()
+        {
+            Flats = context.Flats.ToList();
         }
     }
 }
