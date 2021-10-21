@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,9 @@ namespace HatodikHet_R3VQAV
     {
         PortfolioEntities context = new PortfolioEntities();
         List<Tick> Ticks;
-        List<PortfolioItem> Portfolio = new List<PortfolioItem>();
+        List<PortfolioItem> Portfolio = new List<PortfolioItem>();        
+        List<decimal> Nyereségek = new List<decimal>();
+        List<decimal> nyereségekRendezve;
         public Form1()
         {
             InitializeComponent();
@@ -24,7 +27,7 @@ namespace HatodikHet_R3VQAV
             dataGridView1.DataSource = Ticks;
             CreatePortfolio();
 
-            List<decimal> Nyereségek = new List<decimal>();
+            
             int intervalum = 30;
             DateTime kezdőDátum = (from x in Ticks select x.TradingDay).Min();
             DateTime záróDátum = new DateTime(2016, 12, 30);
@@ -37,7 +40,7 @@ namespace HatodikHet_R3VQAV
                 Console.WriteLine(i + " " + ny);
             }
 
-            var nyereségekRendezve = (from x in Nyereségek
+            nyereségekRendezve = (from x in Nyereségek
                                       orderby x
                                       select x)
                                         .ToList();
@@ -65,6 +68,28 @@ namespace HatodikHet_R3VQAV
                 value += (decimal)last.Price * item.Volume;
             }
             return value;
+        }
+
+        private void FajlbaMentes()
+        {
+            SaveFileDialog sf = new SaveFileDialog();
+            sf.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*,*";         
+            if(sf.ShowDialog() == DialogResult.OK)
+            {
+                using(StreamWriter sw = new StreamWriter(sf.FileName, false, Encoding.UTF8))
+                {
+                    sw.WriteLine("Időszak\tNyereség");
+                    for (int i = 0; i < nyereségekRendezve.Count; i++)
+                    {
+                        sw.WriteLine((i + 1).ToString() + ".\t" + nyereségekRendezve[i]);
+                    }
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FajlbaMentes();
         }
     }
 }
