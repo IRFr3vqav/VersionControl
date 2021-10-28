@@ -18,9 +18,35 @@ namespace MnbCurrencyReader
     {
         BindingList<RateData> Rates = new BindingList<RateData>();
         string result;
+        string result2;
+        BindingList<string> Currencies = new BindingList<string>();
         public Form1()
         {
             InitializeComponent();
+
+            var mnbService2 = new MNBArfolyamServiceSoapClient();
+            var request2 = new GetCurrenciesRequestBody();
+            var response2 = mnbService2.GetCurrencies(request2);
+            result2 = response2.GetCurrenciesResult;
+
+            var xml2 = new XmlDocument();
+            xml2.LoadXml(result2);
+            int szamlalo1 = 0;
+            foreach  (XmlElement el in xml2.DocumentElement)
+            {
+                int szamlalo2 = el.InnerText.Length;
+
+                while (szamlalo2!=0)
+                {
+                    string currency = el.InnerText.Substring(szamlalo1, 3);
+                    Currencies.Add(currency);
+                    szamlalo1 = szamlalo1 + 3;
+                    szamlalo2 = szamlalo2 - 3;
+                }
+                    
+                
+                
+            }
 
             RefreshData();
         }
@@ -31,6 +57,7 @@ namespace MnbCurrencyReader
 
             WebszolgHivasa();
             dataGridView1.DataSource = Rates;
+            comboBox1.DataSource = Currencies;
             XMLfeldolgozasa();
             Diagram();
         }
@@ -64,6 +91,7 @@ namespace MnbCurrencyReader
                 rate.Date = DateTime.Parse(element.GetAttribute("date"));
 
                 var childElement = (XmlElement)element.ChildNodes[0];
+                if (childElement == null) continue;
                 rate.Currency = childElement.GetAttribute("curr");
 
                 var unit = decimal.Parse(childElement.GetAttribute("unit"));
