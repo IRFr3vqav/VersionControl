@@ -84,7 +84,12 @@ namespace NyolcadikHet_R3VQAV
             colorPicker.Color = button.BackColor;
             if (colorPicker.ShowDialog() != DialogResult.OK) return;
             button.BackColor = colorPicker.Color;
-            Factory = new BallFactory { BallColor = button3.BackColor };
+            
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Factory = new PresentFactory { RibbonColor = button5.BackColor, BoxColor = button6.BackColor};
         }
     }
 }
