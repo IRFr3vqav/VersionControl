@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TizenegyedikHet_R3VQAV", "TizenegyedikHet_R3VQAV\TizenegyedikHet_R3VQAV.csproj", "{BCD1CE60-741B-49FA-8D58-0F7047038156}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCD1CE60-741B-49FA-8D58-0F7047038156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCD1CE60-741B-49FA-8D58-0F7047038156}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCD1CE60-741B-49FA-8D58-0F7047038156}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCD1CE60-741B-49FA-8D58-0F7047038156}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1CC63422-D73D-43D8-A9CF-13CD3D888385}
+	EndGlobalSection
+EndGlobal
