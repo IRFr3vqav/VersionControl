@@ -20,20 +20,49 @@ namespace TizenegyedikHet_R3VQAV
 
         Random rng = new Random(1234);
 
+        List<Person> Ferfiak = new List<Person>();
+        List<Person> Nok = new List<Person>();
         public Form1()
         {
             InitializeComponent();
 
-            Population = GetPopulation(@"C:\Temp\nép.csv");
             BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
             DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
 
+        }
 
-            for (int year = 2005; year <= 2024; year++)
+        private void Simulation()
+        {
+            richTextBox1.Clear();
+            Ferfiak.Clear();
+            Nok.Clear();
+
+            for (int year = 2005; year <= int.Parse(numericUpDown1.Text); year++)
             {
                 for (int i = 0; i < Population.Count; i++)
                 {
                     SimStep(year, Population[i]);
+
+                    if (Population[i].Gender==Gender.Male && Population[i].IsAlive==true)
+                    {
+                        Ferfiak.Add(new Person()
+                        {
+                            BirthYear=Population[i].BirthYear,
+                            Gender=Population[i].Gender,
+                            NbrOfChildren=Population[i].NbrOfChildren,
+                            IsAlive=Population[i].IsAlive
+                        });                            
+                    }
+                    else if (Population[i].Gender == Gender.Female && Population[i].IsAlive == true)
+                    {
+                        Nok.Add(new Person()
+                        {
+                            BirthYear = Population[i].BirthYear,
+                            Gender = Population[i].Gender,
+                            NbrOfChildren = Population[i].NbrOfChildren,
+                            IsAlive = Population[i].IsAlive
+                        });
+                    }
                 }
 
                 int nbrOfMales = (from x in Population
@@ -44,6 +73,8 @@ namespace TizenegyedikHet_R3VQAV
                                     select x).Count();
                 Console.WriteLine(string.Format("Év:{0} Férfiak száma:{1} Nők száma:{2}", year, nbrOfMales, nbrOfFemales));
             }
+
+            DisplayResults();
         }
 
         public List<Person> GetPopulation(string csvpath)
@@ -145,5 +176,27 @@ namespace TizenegyedikHet_R3VQAV
 
         }
 
+        private void btn_start_Click(object sender, EventArgs e)
+        {
+            Simulation();
+        }
+
+        private void btn_browse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() != DialogResult.OK) return;
+            txt_eleresi_utvonal.Text = ofd.FileName;
+
+            Population = GetPopulation(txt_eleresi_utvonal.Text);
+            
+        }
+
+        private void DisplayResults()
+        {
+            for (int year = 2005; year < int.Parse(numericUpDown1.Text); year++)
+            {
+                richTextBox1.Text += string.Format("Szimulációs év: {0}\n\tFiúk: {1}\n\tLányok: {2}\n\n", year, Ferfiak.Count, Nok.Count);
+            }
+        }
     }
 }
