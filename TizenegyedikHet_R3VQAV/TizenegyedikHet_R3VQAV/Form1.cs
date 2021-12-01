@@ -24,7 +24,7 @@ namespace TizenegyedikHet_R3VQAV
         {
             InitializeComponent();
 
-            Population = GetPopulation(@"C:\Temp\nép-teszt.csv");
+            Population = GetPopulation(@"C:\Temp\nép.csv");
             BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
             DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
 
@@ -33,7 +33,7 @@ namespace TizenegyedikHet_R3VQAV
             {
                 for (int i = 0; i < Population.Count; i++)
                 {
-
+                    SimStep(year, Population[i]);
                 }
 
                 int nbrOfMales = (from x in Population
@@ -107,6 +107,42 @@ namespace TizenegyedikHet_R3VQAV
             }
 
             return deathprobabilities;
+        }
+
+        private void SimStep(int year, Person p)
+        {
+            if (!p.IsAlive) return; //csak akkor megyunk tovabb, ha meg el a vizsgalt egyen
+
+            byte age = (byte)(year - p.BirthYear); //eletkor kiszamolasa
+
+            //Halalozasi valoszinuseg kikeresese, halal kezelese
+            double pDeath = (from x in DeathProbabilities
+                             where x.Gender == p.Gender && x.Age == age
+                             select x.DeathProb).FirstOrDefault();
+
+            // Meghal a szemely?
+            if (rng.NextDouble() <= pDeath)
+                p.IsAlive = false;
+
+            //Szulesek kezelese, csak az elo noket nezzuk
+            if (p.IsAlive==true && p.Gender==Gender.Female)
+            {
+                //szulesi valoszinuseg kikeresese
+                double pBirth = (from x in BirthProbabilities
+                                 where x.Age == age
+                                 select x.BirthProb).FirstOrDefault();
+
+                //Szuletik gyermek? Ha igen, akkor ujszulott hozzaadasa a population listahoz
+                if (rng.NextDouble() <= pBirth)
+                {
+                    Person ujszulott = new Person();
+                    ujszulott.BirthYear = year;
+                    ujszulott.NbrOfChildren = 0;
+                    ujszulott.Gender = (Gender)(rng.Next(1, 3));
+                    Population.Add(ujszulott);
+                }
+            }
+
         }
 
     }
