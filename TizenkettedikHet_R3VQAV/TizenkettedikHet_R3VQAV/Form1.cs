@@ -58,6 +58,7 @@ namespace TizenkettedikHet_R3VQAV
                           select p;
             if (winners.Count() > 0)
             {
+                btn_start.Visible = true;
                 winnerBrain = winners.FirstOrDefault().Brain.Clone();
                 gc.GameOver -= Gc_GameOver;
                 return;
@@ -78,6 +79,15 @@ namespace TizenkettedikHet_R3VQAV
                     gc.AddPlayer(b.Mutate());
             }
             gc.Start();
+        }
+
+        private void btn_start_Click(object sender, EventArgs e)
+        {
+            gc.ResetCurrentLevel();
+            gc.AddPlayer(winnerBrain.Clone());
+            gc.AddPlayer();
+            ga.Focus();
+            gc.Start(true);
         }
     }
 }
