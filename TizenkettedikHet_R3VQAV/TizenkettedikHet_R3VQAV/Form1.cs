@@ -15,6 +15,11 @@ namespace TizenkettedikHet_R3VQAV
     {
         GameController gc = new GameController();
         GameArea ga;
+
+        int populationSize = 100;
+        int nbrOfSteps = 10;
+        int nbrOfStepsIncrement = 10;
+        int generation = 1;
         public Form1()
         {
             InitializeComponent();
@@ -25,7 +30,12 @@ namespace TizenkettedikHet_R3VQAV
             //gc.AddPlayer();
             //gc.Start(true);
 
+            for (int i = 0; i < populationSize; i++)
+            {
+                gc.AddPlayer(nbrOfSteps);
+            }
 
+            gc.Start();
         }
     }
 }
